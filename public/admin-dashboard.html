@@ -109,24 +109,42 @@
     <label for="messageInput">نص الرسالة:</label><br />
     <textarea id="messageInput" placeholder="اكتب رسالتك هنا..." required></textarea><br />
 
-    <button id="sendMessageBtn">إرسال الرسالة</button>
+    <button id="sendMessageBtn">إرسال رسالة</button>
 
-    <div id="responseMsg"></div>
+    <p id="sendResponse" class="response"></p>
+  </div>
+
+  <div id="sentMessages">
+    <h2>الرسائل المرسلة</h2>
+    <table id="sentMessagesTable">
+      <thead>
+        <tr>
+          <th>البريد الإلكتروني</th>
+          <th>الرسالة</th>
+          <th>تاريخ الإرسال</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- هنا تظهر الرسائل المرسلة -->
+      </tbody>
+    </table>
   </div>
 
   <script>
     const usersTableBody = document.querySelector("#usersTable tbody");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const emailInput = document.getElementById("emailInput");
-    const messageInput = document.getElementById("messageInput");
-    const sendMessageBtn = document.getElementById("sendMessageBtn");
-    const responseMsg = document.getElementById("responseMsg");
+    const sentMessagesTableBody = document.querySelector("#sentMessagesTable tbody");
+    const logoutBtn = document.getElementById('logoutBtn');
+    const sendMessageBtn = document.getElementById('sendMessageBtn');
+    const emailInput = document.getElementById('emailInput');
+    const messageInput = document.getElementById('messageInput');
+    const sendResponse = document.getElementById('sendResponse');
 
-    // تحميل بيانات المستخدمين
+    // تحميل بيانات المستخدمين وعرضها
     async function loadUsers() {
       try {
         const res = await fetch('/api/admin/users');
-        if (!res.ok) throw new Error('خطأ في تحميل البيانات');
+        if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
         const users = await res.json();
 
         usersTableBody.innerHTML = '';
@@ -137,37 +155,122 @@
             <td>${user.email}</td>
             <td>${user.phone}</td>
             <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
-            <td><button class="delete-btn" data-email="${user.email}">🗑️</button></td>
+            <td><button data-email="${user.email}">🗑️</button></td>
           `;
           usersTableBody.appendChild(tr);
         });
 
-        // إضافة مستمع حدث لأزرار الحذف
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const email = e.target.getAttribute('data-email');
-            if (confirm(`هل أنت متأكد من حذف المستخدم ${email}؟`)) {
-              try {
-                const res = await fetch(`/api/admin/user/${encodeURIComponent(email)}`, {
-                  method: 'DELETE'
-                });
-                const data = await res.json();
-                if (res.ok) {
-                  alert(data.message);
-                  loadUsers(); // إعادة تحميل الجدول بعد الحذف
-                } else {
-                  alert(data.error || 'حدث خطأ أثناء الحذف');
-                }
-              } catch {
-                alert('تعذر الاتصال بالخادم');
+        // حذف مستخدم عند الضغط على زر الحذف
+        usersTableBody.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const emailToDelete = btn.getAttribute('data-email');
+            if (!confirm(`هل أنت متأكد من حذف المستخدم: ${emailToDelete} ؟`)) return;
+
+            try {
+              const res = await fetch(`/api/admin/user/${encodeURIComponent(emailToDelete)}`, {
+                method: 'DELETE'
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(data.message);
+                loadUsers();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
               }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
             }
           });
         });
+
       } catch (error) {
-        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل البيانات</td></tr>';
+        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل بيانات المستخدمين</td></tr>';
       }
     }
+
+    // تحميل الرسائل المرسلة وعرضها
+    async function loadMessages() {
+      try {
+        const res = await fetch('/api/admin/messages');
+        if (!res.ok) throw new Error('خطأ في تحميل الرسائل');
+        const messages = await res.json();
+
+        sentMessagesTableBody.innerHTML = '';
+        messages.forEach(msg => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${msg.email}</td>
+            <td>${msg.message}</td>
+            <td>${new Date(msg.sentAt).toLocaleString('ar-EG')}</td>
+            <td><button data-email="${msg.email}">🗑️</button></td>
+          `;
+          sentMessagesTableBody.appendChild(tr);
+        });
+
+        // حذف رسالة عند الضغط على زر الحذف
+        sentMessagesTableBody.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const emailToDelete = btn.getAttribute('data-email');
+            if (!confirm(`هل أنت متأكد من حذف الرسالة المرسلة إلى: ${emailToDelete} ؟`)) return;
+
+            try {
+              const res = await fetch('/api/admin/message', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailToDelete })
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(data.message);
+                loadMessages();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+      } catch (error) {
+        sentMessagesTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل الرسائل</td></tr>';
+      }
+    }
+
+    // إرسال رسالة إلى مستخدم
+    sendMessageBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!email || !message) {
+        sendResponse.textContent = 'يرجى تعبئة البريد الإلكتروني والرسالة';
+        sendResponse.classList.add('error');
+        return;
+      }
+      sendResponse.textContent = '';
+      sendResponse.classList.remove('error');
+
+      try {
+        const res = await fetch('/api/admin/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, message })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          sendResponse.textContent = data.message;
+          emailInput.value = '';
+          messageInput.value = '';
+          loadMessages();
+        } else {
+          sendResponse.textContent = data.error || 'حدث خطأ أثناء إرسال الرسالة';
+          sendResponse.classList.add('error');
+        }
+      } catch {
+        sendResponse.textContent = 'تعذر الاتصال بالخادم';
+        sendResponse.classList.add('error');
+      }
+    });
 
     // تسجيل خروج الادمن
     logoutBtn.addEventListener('click', async () => {
@@ -176,51 +279,16 @@
         if (res.ok) {
           window.location.href = '/admin-login.html';
         } else {
-          alert('خطأ أثناء تسجيل الخروج');
+          alert('حدث خطأ أثناء تسجيل الخروج');
         }
       } catch {
         alert('تعذر الاتصال بالخادم');
       }
     });
 
-    // إرسال رسالة إلى مستخدم
-    sendMessageBtn.addEventListener('click', async () => {
-      responseMsg.textContent = '';
-      responseMsg.classList.remove('error');
-
-      const email = emailInput.value.trim();
-      const message = messageInput.value.trim();
-
-      if (!email || !message) {
-        responseMsg.textContent = 'يرجى إدخال البريد الإلكتروني والرسالة';
-        responseMsg.classList.add('error');
-        return;
-      }
-
-      try {
-        const res = await fetch('/api/admin/message', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, message })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          responseMsg.textContent = data.message;
-          emailInput.value = '';
-          messageInput.value = '';
-        } else {
-          responseMsg.textContent = data.error || 'حدث خطأ أثناء الإرسال';
-          responseMsg.classList.add('error');
-        }
-      } catch {
-        responseMsg.textContent = 'تعذر الاتصال بالخادم';
-        responseMsg.classList.add('error');
-      }
-    });
-
+    // تحميل البيانات عند فتح الصفحة
     loadUsers();
+    loadMessages();
   </script>
 </body>
 

