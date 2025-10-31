@@ -110,7 +110,7 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
     await transporter.sendMail({
       from: `"lab-results (معمل چون)" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'gizaresult',
+      subject: 'lab-results',
       text: message,
       html: `<p>${message}</p>`
     });
