@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>لوحة تحكم الادمن - المراسلات</title>
+  <title>لوحة تحكم الادمن</title>
+
   <style>
     /* متغيرات الألوان للدارك مود */
     :root {
@@ -15,13 +16,14 @@
       --danger: #dc3545;
       --warning: #ffc107;
       --info: #0dcaf0;
+
       --dark-bg: #121212;
       --dark-card: #1e1e1e;
       --dark-border: #2d2d2d;
       --dark-text: #f8f9fa;
       --dark-text-secondary: #adb5bd;
+
       --medical-blue: #1a73e8;
-      --medical-green: #2e7d32;
       --medical-red: #c62828;
     }
 
@@ -146,6 +148,80 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
+    /* إحصائيات */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--dark-card);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--dark-border);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card .number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--medical-blue);
+      margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+      color: var(--dark-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* جداول */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--dark-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--dark-border);
+      padding: 12px 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--medical-blue) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-icon {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger) 0%, #b02a37 100%);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #b02a37 0%, #8a1f29 100%);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
     /* قسم إرسال الرسائل */
     .form-group {
       margin-bottom: 20px;
@@ -163,7 +239,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .email-option {
@@ -198,16 +274,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .email-input-group input[type="email"] {
-      flex: 1;
-    }
-
-    .email-label {
-      font-weight: 600;
-      color: var(--dark-text);
-      min-width: 80px;
+      flex-wrap: wrap;
     }
 
     .email-input {
@@ -257,7 +324,6 @@
       color: var(--dark-text-secondary);
     }
 
-    /* أزرار الإجراءات */
     .action-buttons {
       display: flex;
       gap: 15px;
@@ -331,35 +397,6 @@
       border-right: 4px solid var(--info);
     }
 
-    /* إحصائيات */
-    .stats-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: var(--dark-card);
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid var(--dark-border);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-card .number {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--medical-blue);
-      margin-bottom: 5px;
-    }
-
-    .stat-card .label {
-      color: var(--dark-text-secondary);
-      font-size: 0.9rem;
-    }
-
     /* تذييل الصفحة */
     .footer {
       text-align: center;
@@ -377,7 +414,7 @@
         gap: 20px;
         text-align: center;
       }
-      
+
       .stats-container {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -408,7 +445,8 @@
         padding: 20px;
       }
 
-      button, .action-btn {
+      button,
+      .action-btn {
         padding: 10px 20px;
         font-size: 0.9rem;
       }
@@ -448,13 +486,8 @@
         justify-content: center;
       }
     }
-
-    /* أيقونات */
-    .icon {
-      font-size: 1.2em;
-      vertical-align: middle;
-    }
   </style>
+
   <!-- خط Cairo للعربية -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- أيقونات -->
@@ -467,8 +500,8 @@
     <div class="header-content">
       <div class="logo">م</div>
       <div>
-        <h1>لوحة تحكم الإدمن - المراسلات</h1>
-        <div class="subtitle">إرسال رسائل إلى المستلمين المحددين</div>
+        <h1>لوحة تحكم الإدمن</h1>
+        <div class="subtitle">إدارة المستخدمين والمراسلات</div>
       </div>
     </div>
     <button id="logoutBtn">
@@ -480,15 +513,15 @@
   <!-- إحصائيات -->
   <div class="stats-container">
     <div class="stat-card">
-      <div class="number" id="totalRecipients">4</div>
-      <div class="label">عدد المستلمين المتاحين</div>
+      <div class="number" id="totalUsers">-</div>
+      <div class="label">عدد المستخدمين</div>
     </div>
     <div class="stat-card">
-      <div class="number" id="selectedRecipients">0</div>
-      <div class="label">المستلمين المحددين</div>
+      <div class="number" id="totalRecipients">-</div>
+      <div class="label">المستلمين المتاحين (من المستخدمين)</div>
     </div>
     <div class="stat-card">
-      <div class="number" id="totalSent">0</div>
+      <div class="number" id="totalSent">-</div>
       <div class="label">الرسائل المرسلة</div>
     </div>
     <div class="stat-card">
@@ -497,14 +530,35 @@
     </div>
   </div>
 
+  <!-- قسم المستخدمين -->
+  <div class="content-section">
+    <h2><i class="fas fa-users"></i> بيانات المستخدمين المرسلة</h2>
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>البريد الإلكتروني</th>
+          <th>رقم التليفون</th>
+          <th>تاريخ الإرسال</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="5">جاري التحميل...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- قسم إرسال الرسائل -->
   <div class="content-section">
     <h2><i class="fas fa-envelope"></i> إرسال رسالة</h2>
-    
+
     <div class="form-group">
-      <label>اختر المستلمين:</label>
+      <label>اختر المستلمين من قائمة المستخدمين:</label>
       <div class="email-options" id="emailOptions">
-        <!-- الخيارات سيتم إنشاؤها بواسطة الجافاسكريبت -->
+        <!-- سيتم إنشاؤها من الجافاسكريبت -->
       </div>
     </div>
 
@@ -512,7 +566,7 @@
       <label>أو أدخل بريداً إلكترونياً جديداً:</label>
       <div class="email-input-group">
         <input type="email" id="customEmail" class="email-input" placeholder="example@domain.com">
-        <button type="button" id="addCustomEmail" class="action-btn" style="background: var(--info);">
+        <button type="button" id="addCustomEmail" class="action-btn" style="background: var(--info); color:#001018;">
           <i class="fas fa-plus"></i>
           إضافة
         </button>
@@ -520,13 +574,8 @@
     </div>
 
     <div class="form-group">
-      <label for="subjectInput">عنوان الرسالة:</label>
-      <input type="text" id="subjectInput" class="email-input" placeholder="أدخل عنوان الرسالة...">
-    </div>
-
-    <div class="form-group">
       <label for="messageInput">نص الرسالة:</label>
-      <textarea id="messageInput" placeholder="اكتب رسالتك هنا..."></textarea>
+      <textarea id="messageInput" placeholder="اكتب رسالتك هنا..." required></textarea>
     </div>
 
     <div class="action-buttons">
@@ -534,7 +583,7 @@
         <i class="fas fa-paper-plane"></i>
         إرسال الرسالة
       </button>
-      
+
       <button id="clearFormBtn" class="action-btn clear-btn">
         <i class="fas fa-eraser"></i>
         مسح النموذج
@@ -544,272 +593,427 @@
     <div id="sendResponse" class="response"></div>
   </div>
 
-  <!-- تذييل الصفحة -->
+  <!-- قسم الرسائل المرسلة -->
+  <div class="content-section">
+    <h2><i class="fas fa-paper-plane"></i> الرسائل المرسلة</h2>
+    <table id="sentMessagesTable">
+      <thead>
+        <tr>
+          <th>البريد الإلكتروني</th>
+          <th>الرسالة</th>
+          <th>تاريخ الإرسال</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="4">جاري التحميل...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- تذييل -->
   <div class="footer">
-    <p>© 2024 نظام المراسلات الإلكتروني. جميع الحقوق محفوظة.</p>
-    <p>لوحة تحكم الإدمن - الإصدار 1.0</p>
+    <p>© 2024 نظام لوحة الأدمن. جميع الحقوق محفوظة.</p>
   </div>
 
   <script>
     // عناصر DOM
+    const usersTableBody = document.querySelector("#usersTable tbody");
+    const sentMessagesTableBody = document.querySelector("#sentMessagesTable tbody");
+
+    const logoutBtn = document.getElementById('logoutBtn');
     const emailOptionsContainer = document.getElementById('emailOptions');
     const customEmailInput = document.getElementById('customEmail');
     const addCustomEmailBtn = document.getElementById('addCustomEmail');
-    const subjectInput = document.getElementById('subjectInput');
+
     const messageInput = document.getElementById('messageInput');
     const sendMessageBtn = document.getElementById('sendMessageBtn');
     const clearFormBtn = document.getElementById('clearFormBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
     const sendResponse = document.getElementById('sendResponse');
-    
-    // عناصر الإحصائيات
-    const selectedRecipientsEl = document.getElementById('selectedRecipients');
+
+    // إحصائيات
+    const totalUsersEl = document.getElementById('totalUsers');
+    const totalRecipientsEl = document.getElementById('totalRecipients');
     const totalSentEl = document.getElementById('totalSent');
     const lastSentEl = document.getElementById('lastSent');
 
-    // قائمة البريدات الإلكترونية الافتراضية (يمكن تعديلها)
-    const defaultEmails = [
-      { email: "admin@lab.com", label: "المدير العام", checked: false },
-      { email: "reception@lab.com", label: "موظف الاستقبال", checked: false },
-      { email: "lab.manager@lab.com", label: "مدير المختبر", checked: false },
-      { email: "results@lab.com", label: "قسم النتائج", checked: false }
-    ];
+    // بيانات داخلية
+    let usersCache = [];          // من /api/admin/users
+    let messagesCache = [];       // من /api/admin/messages
 
-    // بيانات التطبيق
-    let emailList = [...defaultEmails];
-    let selectedEmails = [];
+    // قائمة المستلمين (مبنية على المستخدمين + ايميلات مضافة يدوياً)
+    let emailList = [];           // {email,label,checked,source}
     let totalMessagesSent = 0;
     let lastMessageSent = null;
 
-    // تهيئة قائمة البريدات الإلكترونية
-    function initEmailOptions() {
-      emailOptionsContainer.innerHTML = '';
-      
-      emailList.forEach((emailObj, index) => {
-        const emailOption = document.createElement('div');
-        emailOption.className = `email-option ${emailObj.checked ? 'selected' : ''}`;
-        emailOption.innerHTML = `
-          <input type="checkbox" id="email-${index}" ${emailObj.checked ? 'checked' : ''} data-index="${index}">
-          <div>
-            <div style="font-weight: 600; color: var(--dark-text);">${emailObj.label}</div>
-            <div style="color: var(--dark-text-secondary); font-size: 0.9rem;">${emailObj.email}</div>
-          </div>
-        `;
-        
-        // إضافة حدث التحديد
-        const checkbox = emailOption.querySelector('input[type="checkbox"]');
-        checkbox.addEventListener('change', function() {
-          const idx = parseInt(this.getAttribute('data-index'));
-          emailList[idx].checked = this.checked;
-          emailOption.classList.toggle('selected', this.checked);
-          updateSelectedRecipients();
-        });
-        
-        emailOptionsContainer.appendChild(emailOption);
-      });
-      
-      updateSelectedRecipients();
-      updateStatistics();
-    }
-
-    // تحديث عدد المستلمين المحددين
-    function updateSelectedRecipients() {
-      selectedEmails = emailList.filter(email => email.checked);
-      selectedRecipientsEl.textContent = selectedEmails.length;
-    }
-
-    // تحديث الإحصائيات
-    function updateStatistics() {
-      document.getElementById('totalRecipients').textContent = emailList.length;
-      selectedRecipientsEl.textContent = selectedEmails.length;
-      totalSentEl.textContent = totalMessagesSent;
-      
-      if (lastMessageSent) {
-        const timeDiff = Math.floor((new Date() - new Date(lastMessageSent)) / 60000); // دقائق
-        if (timeDiff < 1) {
-          lastSentEl.textContent = 'الآن';
-        } else if (timeDiff < 60) {
-          lastSentEl.textContent = `منذ ${timeDiff} دقيقة`;
-        } else if (timeDiff < 1440) {
-          lastSentEl.textContent = `منذ ${Math.floor(timeDiff / 60)} ساعة`;
-        } else {
-          lastSentEl.textContent = new Date(lastMessageSent).toLocaleDateString('ar-EG');
-        }
-      } else {
-        lastSentEl.textContent = '-';
-      }
-    }
-
-    // إضافة بريد إلكتروني مخصص
-    addCustomEmailBtn.addEventListener('click', function() {
-      const email = customEmailInput.value.trim();
-      
-      if (!email) {
-        showResponse('يرجى إدخال بريد إلكتروني', 'error');
-        return;
-      }
-      
-      // التحقق من صيغة البريد الإلكتروني
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        showResponse('صيغة البريد الإلكتروني غير صحيحة', 'error');
-        return;
-      }
-      
-      // التحقق من عدم تكرار البريد الإلكتروني
-      if (emailList.some(e => e.email === email)) {
-        showResponse('هذا البريد الإلكتروني مضاف بالفعل', 'error');
-        return;
-      }
-      
-      // إضافة البريد الإلكتروني الجديد
-      emailList.push({
-        email: email,
-        label: `بريد مخصص ${emailList.length - defaultEmails.length + 1}`,
-        checked: true
-      });
-      
-      // إعادة تهيئة القائمة
-      initEmailOptions();
-      
-      // مسح حقل الإدخال
-      customEmailInput.value = '';
-      
-      showResponse(`تم إضافة البريد الإلكتروني: ${email}`, 'success');
-    });
-
-    // إرسال الرسالة
-    sendMessageBtn.addEventListener('click', function() {
-      const subject = subjectInput.value.trim();
-      const message = messageInput.value.trim();
-      
-      // التحقق من البيانات
-      if (selectedEmails.length === 0) {
-        showResponse('يرجى تحديد مستلم واحد على الأقل', 'error');
-        return;
-      }
-      
-      if (!message) {
-        showResponse('يرجى كتابة نص الرسالة', 'error');
-        return;
-      }
-      
-      // عرض تفاصيل الإرسال للمستخدم
-      const emailListText = selectedEmails.map(e => `${e.label} (${e.email})`).join(', ');
-      const confirmation = confirm(`هل تريد إرسال الرسالة إلى:
-      
-المستلمون: ${emailListText}
-
-العنوان: ${subject || 'بدون عنوان'}
-
-الرسالة: ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}
-
-ستتم معالجة الإرسال يدوياً من قبلك.`);
-      
-      if (!confirmation) return;
-      
-      // في التطبيق الحقيقي، هنا يتم إرسال طلب إلى الخادم
-      // هذا مثال لمحاكاة الإرسال
-      
-      // محاكاة الإرسال
-      sendMessageBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-      sendMessageBtn.disabled = true;
-      
-      setTimeout(() => {
-        // زيادة عداد الرسائل المرسلة
-        totalMessagesSent++;
-        lastMessageSent = new Date().toISOString();
-        
-        // إعادة تعيين النموذج
-        subjectInput.value = '';
-        messageInput.value = '';
-        
-        // إلغاء تحديد جميع البريدات
-        emailList.forEach(email => email.checked = false);
-        initEmailOptions();
-        
-        // تحديث الإحصائيات
-        updateStatistics();
-        
-        // عرض رسالة النجاح
-        showResponse(`تم إعداد الرسالة للإرسال إلى ${selectedEmails.length} مستلم بنجاح. يمكنك الآن إرسالها يدوياً.`, 'success');
-        
-        // إعادة تعيين زر الإرسال
-        sendMessageBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرسالة';
-        sendMessageBtn.disabled = false;
-      }, 1500);
-    });
-
-    // مسح النموذج
-    clearFormBtn.addEventListener('click', function() {
-      if (confirm('هل تريد مسح جميع الحقول؟')) {
-        subjectInput.value = '';
-        messageInput.value = '';
-        customEmailInput.value = '';
-        
-        // إلغاء تحديد جميع البريدات
-        emailList.forEach(email => email.checked = false);
-        initEmailOptions();
-        
-        showResponse('تم مسح النموذج بنجاح', 'info');
-      }
-    });
-
-    // تسجيل خروج
-    logoutBtn.addEventListener('click', function() {
-      if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-        // في التطبيق الحقيقي: إرسال طلب تسجيل خروج إلى الخادم
-        window.location.href = '/admin-login.html';
-      }
-    });
-
-    // عرض رسالة الاستجابة
+    // مساعد لعرض رسائل
     function showResponse(message, type) {
       sendResponse.textContent = message;
       sendResponse.className = `response ${type} show`;
-      
-      // إخفاء الرسالة بعد 5 ثواني
-      setTimeout(() => {
-        sendResponse.classList.remove('show');
-      }, 5000);
+      setTimeout(() => sendResponse.classList.remove('show'), 5000);
     }
 
-    // السماح بإدخال الإيميل يدوياً عند الضغط على Enter
-    customEmailInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        addCustomEmailBtn.click();
+    // ====== المستخدمين ======
+    async function loadUsers() {
+      try {
+        const res = await fetch('/api/admin/users');
+        if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
+
+        const users = await res.json();
+        usersCache = Array.isArray(users) ? users : [];
+
+        // جدول المستخدمين
+        usersTableBody.innerHTML = '';
+        if (usersCache.length === 0) {
+          usersTableBody.innerHTML = '<tr><td colspan="5">لا توجد بيانات مستخدمين</td></tr>';
+        } else {
+          usersCache.forEach(user => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${escapeHtml(user.name ?? '')}</td>
+              <td>${escapeHtml(user.email ?? '')}</td>
+              <td>${escapeHtml(user.phone ?? '')}</td>
+              <td>${user.receivedAt ? new Date(user.receivedAt).toLocaleString('ar-EG') : '-'}</td>
+              <td>
+                <button class="btn-icon btn-danger" data-action="delete-user" data-email="${encodeURIComponent(user.email ?? '')}">
+                  🗑️
+                </button>
+              </td>
+            `;
+            usersTableBody.appendChild(tr);
+          });
+        }
+
+        // أحداث حذف المستخدم
+        usersTableBody.querySelectorAll('button[data-action="delete-user"]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const emailToDelete = decodeURIComponent(btn.getAttribute('data-email'));
+            if (!emailToDelete) return;
+
+            if (!confirm(`هل أنت متأكد من حذف المستخدم: ${emailToDelete} ؟`)) return;
+
+            try {
+              const delRes = await fetch(`/api/admin/user/${encodeURIComponent(emailToDelete)}`, {
+                method: 'DELETE'
+              });
+              const data = await delRes.json().catch(() => ({}));
+              if (delRes.ok) {
+                alert(data.message || 'تم الحذف');
+                await loadUsers();
+                await loadMessages();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+        // بناء قائمة المستلمين من المستخدمين
+        buildEmailOptionsFromUsers();
+
+        // تحديث الإحصائيات
+        totalUsersEl.textContent = usersCache.length;
+        totalRecipientsEl.textContent = emailList.length;
+
+      } catch (error) {
+        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل بيانات المستخدمين</td></tr>';
+        usersCache = [];
+        buildEmailOptionsFromUsers(); // لتفادي صفحة فاضية
+        totalUsersEl.textContent = '0';
+        totalRecipientsEl.textContent = emailList.length;
+      }
+    }
+
+    function buildEmailOptionsFromUsers() {
+      // حافظ على الإيميلات اليدوية الموجودة
+      const manualEmails = emailList.filter(e => e.source === 'manual');
+
+      // ابني من usersCache
+      const userEmails = usersCache
+        .filter(u => u && u.email)
+        .map(u => ({
+          email: String(u.email),
+          label: u.name ? String(u.name) : String(u.email),
+          checked: false,
+          source: 'user'
+        }));
+
+      // دمج بدون تكرار
+      const map = new Map();
+      [...userEmails, ...manualEmails].forEach(item => {
+        const key = item.email.toLowerCase();
+        if (!map.has(key)) map.set(key, item);
+      });
+
+      emailList = Array.from(map.values());
+      initEmailOptionsUI();
+    }
+
+    function initEmailOptionsUI() {
+      emailOptionsContainer.innerHTML = '';
+
+      if (emailList.length === 0) {
+        emailOptionsContainer.innerHTML = `<div style="color: var(--dark-text-secondary);">لا يوجد مستلمون حالياً</div>`;
+        return;
+      }
+
+      emailList.forEach((emailObj, index) => {
+        const emailOption = document.createElement('div');
+        emailOption.className = `email-option ${emailObj.checked ? 'selected' : ''}`;
+
+        emailOption.innerHTML = `
+          <input type="checkbox" id="email-${index}" ${emailObj.checked ? 'checked' : ''} data-index="${index}">
+          <div>
+            <div style="font-weight: 600; color: var(--dark-text);">${escapeHtml(emailObj.label)}</div>
+            <div style="color: var(--dark-text-secondary); font-size: 0.9rem;">${escapeHtml(emailObj.email)}</div>
+          </div>
+        `;
+
+        const checkbox = emailOption.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', function () {
+          const idx = parseInt(this.getAttribute('data-index'), 10);
+          emailList[idx].checked = this.checked;
+          emailOption.classList.toggle('selected', this.checked);
+        });
+
+        emailOptionsContainer.appendChild(emailOption);
+      });
+
+      totalRecipientsEl.textContent = emailList.length;
+    }
+
+    // إضافة بريد يدوي
+    addCustomEmailBtn.addEventListener('click', () => {
+      const email = customEmailInput.value.trim();
+      if (!email) return showResponse('يرجى إدخال بريد إلكتروني', 'error');
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) return showResponse('صيغة البريد الإلكتروني غير صحيحة', 'error');
+
+      const exists = emailList.some(e => e.email.toLowerCase() === email.toLowerCase());
+      if (exists) return showResponse('هذا البريد الإلكتروني مضاف بالفعل', 'error');
+
+      emailList.push({
+        email,
+        label: 'بريد مخصص',
+        checked: true,
+        source: 'manual'
+      });
+
+      customEmailInput.value = '';
+      initEmailOptionsUI();
+      showResponse(`تم إضافة البريد الإلكتروني: ${email}`, 'success');
+    });
+
+    customEmailInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addCustomEmailBtn.click();
+    });
+
+    // ====== الرسائل ======
+    async function loadMessages() {
+      try {
+        const res = await fetch('/api/admin/messages');
+        if (!res.ok) throw new Error('خطأ في تحميل الرسائل');
+
+        const messages = await res.json();
+        messagesCache = Array.isArray(messages) ? messages : [];
+
+        sentMessagesTableBody.innerHTML = '';
+        if (messagesCache.length === 0) {
+          sentMessagesTableBody.innerHTML = '<tr><td colspan="4">لا توجد رسائل مرسلة</td></tr>';
+        } else {
+          messagesCache.forEach(msg => {
+            const tr = document.createElement('tr');
+
+            const sentAtText = msg.sentAt ? new Date(msg.sentAt).toLocaleString('ar-EG') : '-';
+            const safeEmail = escapeHtml(String(msg.email ?? ''));
+            const safeMessage = escapeHtml(String(msg.message ?? ''));
+
+            // لو عندك msg.id من الباك اند، الأفضل نحذفه بالـ id
+            const msgId = msg.id ?? msg._id ?? null;
+
+            tr.innerHTML = `
+              <td>${safeEmail}</td>
+              <td style="text-align:right;">${safeMessage}</td>
+              <td>${sentAtText}</td>
+              <td>
+                <button class="btn-icon btn-danger"
+                  data-action="delete-message"
+                  data-email="${encodeURIComponent(String(msg.email ?? ''))}"
+                  data-id="${msgId ? encodeURIComponent(String(msgId)) : ''}">
+                  🗑️
+                </button>
+              </td>
+            `;
+            sentMessagesTableBody.appendChild(tr);
+          });
+        }
+
+        // أحداث حذف الرسالة
+        sentMessagesTableBody.querySelectorAll('button[data-action="delete-message"]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const emailToDelete = decodeURIComponent(btn.getAttribute('data-email') || '');
+            const idToDelete = decodeURIComponent(btn.getAttribute('data-id') || '');
+
+            if (!confirm(`هل أنت متأكد من حذف الرسالة المرسلة إلى: ${emailToDelete} ؟`)) return;
+
+            try {
+              // لو الباك بيرجع ID استخدمه
+              // غيّر جسم الطلب حسب ما يدعمه الباك عندك (الأفضل: حذف بالـ id)
+              const body = idToDelete ? { id: idToDelete } : { email: emailToDelete };
+
+              const delRes = await fetch('/api/admin/message', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+              });
+
+              const data = await delRes.json().catch(() => ({}));
+              if (delRes.ok) {
+                alert(data.message || 'تم الحذف');
+                await loadMessages();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+        // إحصائيات
+        totalSentEl.textContent = messagesCache.length;
+        const last = messagesCache
+          .filter(m => m && m.sentAt)
+          .map(m => new Date(m.sentAt))
+          .sort((a, b) => b - a)[0];
+
+        lastMessageSent = last ? last.toISOString() : null;
+        updateLastSentUI();
+
+      } catch (error) {
+        sentMessagesTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل الرسائل</td></tr>';
+        messagesCache = [];
+        totalSentEl.textContent = '0';
+        lastMessageSent = null;
+        updateLastSentUI();
+      }
+    }
+
+    function updateLastSentUI() {
+      if (!lastMessageSent) return lastSentEl.textContent = '-';
+
+      const now = new Date();
+      const last = new Date(lastMessageSent);
+      const diffMin = Math.floor((now - last) / 60000);
+
+      if (diffMin < 1) lastSentEl.textContent = 'الآن';
+      else if (diffMin < 60) lastSentEl.textContent = `منذ ${diffMin} دقيقة`;
+      else if (diffMin < 1440) lastSentEl.textContent = `منذ ${Math.floor(diffMin / 60)} ساعة`;
+      else lastSentEl.textContent = last.toLocaleDateString('ar-EG');
+    }
+
+    // ====== إرسال رسالة ======
+    sendMessageBtn.addEventListener('click', async () => {
+      const selected = emailList.filter(e => e.checked).map(e => e.email);
+      const message = messageInput.value.trim();
+
+      if (selected.length === 0) return showResponse('يرجى تحديد مستلم واحد على الأقل', 'error');
+      if (!message) return showResponse('يرجى كتابة نص الرسالة', 'error');
+
+      // زر الإرسال: حالة تحميل
+      sendMessageBtn.disabled = true;
+      const oldBtnHtml = sendMessageBtn.innerHTML;
+      sendMessageBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+
+      try {
+        // بما إن API عندك بيرسل لواحد (email + message)
+        // هنرسل لكل مستلم طلب منفصل (مضمون يشتغل مع باكك الحالي)
+        const results = await Promise.allSettled(
+          selected.map(email =>
+            fetch('/api/admin/message', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, message })
+            }).then(async r => {
+              const data = await r.json().catch(() => ({}));
+              if (!r.ok) throw new Error(data.error || 'فشل الإرسال');
+              return data;
+            })
+          )
+        );
+
+        const okCount = results.filter(r => r.status === 'fulfilled').length;
+        const failCount = results.length - okCount;
+
+        if (okCount > 0 && failCount === 0) {
+          showResponse(`تم إرسال الرسالة بنجاح إلى ${okCount} مستلم.`, 'success');
+        } else if (okCount > 0 && failCount > 0) {
+          showResponse(`تم الإرسال إلى ${okCount} مستلم، وفشل إلى ${failCount}.`, 'info');
+        } else {
+          showResponse('فشل إرسال الرسالة.', 'error');
+        }
+
+        // تنظيف
+        messageInput.value = '';
+        emailList.forEach(e => e.checked = false);
+        initEmailOptionsUI();
+
+        // تحديث البيانات
+        await loadMessages();
+
+      } catch {
+        showResponse('تعذر الاتصال بالخادم', 'error');
+      } finally {
+        sendMessageBtn.disabled = false;
+        sendMessageBtn.innerHTML = oldBtnHtml;
       }
     });
 
-    // تهيئة الصفحة عند التحميل
-    document.addEventListener('DOMContentLoaded', function() {
-      initEmailOptions();
-      
-      // تحميل أي بيانات محفوظة
-      const savedData = localStorage.getItem('adminDashboardData');
-      if (savedData) {
-        try {
-          const data = JSON.parse(savedData);
-          totalMessagesSent = data.totalMessagesSent || 0;
-          lastMessageSent = data.lastMessageSent || null;
-          
-          // تحديث الإحصائيات
-          updateStatistics();
-        } catch (e) {
-          console.log('لا توجد بيانات محفوظة');
-        }
-      }
-      
-      // حفظ البيانات عند إغلاق الصفحة
-      window.addEventListener('beforeunload', function() {
-        const data = {
-          totalMessagesSent: totalMessagesSent,
-          lastMessageSent: lastMessageSent,
-          emailList: emailList
-        };
-        localStorage.setItem('adminDashboardData', JSON.stringify(data));
-      });
+    // مسح النموذج
+    clearFormBtn.addEventListener('click', () => {
+      if (!confirm('هل تريد مسح جميع الحقول؟')) return;
+
+      messageInput.value = '';
+      customEmailInput.value = '';
+      emailList.forEach(e => e.checked = false);
+      initEmailOptionsUI();
+      showResponse('تم مسح النموذج بنجاح', 'info');
     });
+
+    // تسجيل خروج
+    logoutBtn.addEventListener('click', async () => {
+      if (!confirm('هل أنت متأكد من تسجيل الخروج؟')) return;
+
+      try {
+        const res = await fetch('/api/admin/logout', { method: 'POST' });
+        if (res.ok) window.location.href = '/admin-login.html';
+        else alert('حدث خطأ أثناء تسجيل الخروج');
+      } catch {
+        alert('تعذر الاتصال بالخادم');
+      }
+    });
+
+    // حماية بسيطة من XSS في عرض النصوص (أفضل ممارسة)
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    // تحميل البيانات عند فتح الصفحة
+    (async function init() {
+      await loadUsers();
+      await loadMessages();
+      updateLastSentUI();
+    })();
   </script>
 </body>
 
