@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>لوحة تحكم الادمن</title>
+  <title>لوحة تحكم الادمن - المراسلات</title>
   <style>
     /* متغيرات الألوان للدارك مود */
     :root {
@@ -136,44 +136,6 @@
       box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
     }
 
-    /* الجداول */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: var(--dark-card);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    th,
-    td {
-      border-bottom: 1px solid var(--dark-border);
-      padding: 16px 12px;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    th {
-      background: linear-gradient(135deg, var(--medical-blue) 0%, #1a56db 100%);
-      color: white;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    tbody tr {
-      transition: background-color 0.2s;
-    }
-
-    tbody tr:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    tbody tr:nth-child(even) {
-      background-color: rgba(255, 255, 255, 0.02);
-    }
-
     /* حاويات المحتوى */
     .content-section {
       background: var(--dark-card);
@@ -185,10 +147,6 @@
     }
 
     /* قسم إرسال الرسائل */
-    #messages {
-      margin-top: 30px;
-    }
-
     .form-group {
       margin-bottom: 20px;
     }
@@ -201,10 +159,58 @@
       font-size: 0.95rem;
     }
 
-    textarea,
-    input[type="email"],
-    input[type="text"],
-    select {
+    .email-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .email-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid var(--dark-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .email-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--medical-blue);
+    }
+
+    .email-option.selected {
+      background: rgba(26, 115, 232, 0.15);
+      border-color: var(--medical-blue);
+    }
+
+    .email-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .email-input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .email-input-group input[type="email"] {
+      flex: 1;
+    }
+
+    .email-label {
+      font-weight: 600;
+      color: var(--dark-text);
+      min-width: 80px;
+    }
+
+    .email-input {
       width: 100%;
       padding: 14px;
       background: rgba(255, 255, 255, 0.07);
@@ -216,23 +222,81 @@
       transition: border-color 0.2s;
     }
 
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-      line-height: 1.5;
-    }
-
-    textarea:focus,
-    input:focus,
-    select:focus {
+    .email-input:focus {
       outline: none;
       border-color: var(--medical-blue);
       background: rgba(255, 255, 255, 0.1);
     }
 
-    textarea::placeholder,
-    input::placeholder {
+    .email-input::placeholder {
       color: var(--dark-text-secondary);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--dark-border);
+      border-radius: 8px;
+      color: var(--dark-text);
+      font-size: 1em;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--medical-blue);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    textarea::placeholder {
+      color: var(--dark-text-secondary);
+    }
+
+    /* أزرار الإجراءات */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, var(--success) 0%, #146c43 100%);
+      color: white;
+    }
+
+    .send-btn:hover {
+      background: linear-gradient(135deg, #157347 0%, #0f5132 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    }
+
+    .clear-btn {
+      background: linear-gradient(135deg, var(--warning) 0%, #ff9800 100%);
+      color: #212529;
+    }
+
+    .clear-btn:hover {
+      background: linear-gradient(135deg, #ffca2c 0%, #ffb300 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
     }
 
     /* الاستجابات */
@@ -265,42 +329,6 @@
       background: rgba(13, 202, 240, 0.15);
       color: var(--info);
       border-right: 4px solid var(--info);
-    }
-
-    /* أزرار الحذف في الجداول */
-    .delete-btn {
-      padding: 8px 16px;
-      background: linear-gradient(135deg, var(--danger) 0%, #a71d2a 100%);
-      font-size: 0.9rem;
-      border-radius: 6px;
-    }
-
-    .delete-btn:hover {
-      background: linear-gradient(135deg, #bb2d3b 0%, #8c1a24 100%);
-    }
-
-    /* حالة التحاليل */
-    .status {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: inline-block;
-    }
-
-    .status.pending {
-      background: rgba(255, 193, 7, 0.2);
-      color: var(--warning);
-    }
-
-    .status.completed {
-      background: rgba(25, 135, 84, 0.2);
-      color: var(--success);
-    }
-
-    .status.cancelled {
-      background: rgba(220, 53, 69, 0.2);
-      color: var(--danger);
     }
 
     /* إحصائيات */
@@ -372,22 +400,15 @@
         font-size: 1.2rem;
       }
 
-      table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-      }
-
-      th, td {
-        padding: 12px 8px;
-        font-size: 0.9rem;
+      .email-options {
+        grid-template-columns: 1fr;
       }
 
       .content-section {
         padding: 20px;
       }
 
-      button {
+      button, .action-btn {
         padding: 10px 20px;
         font-size: 0.9rem;
       }
@@ -414,13 +435,17 @@
         font-size: 1.1rem;
       }
 
-      th, td {
-        padding: 10px 6px;
-        font-size: 0.85rem;
-      }
-
       .content-section {
         padding: 15px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .action-btn {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -442,8 +467,8 @@
     <div class="header-content">
       <div class="logo">م</div>
       <div>
-        <h1>لوحة تحكم الإدمن - مختبر التحاليل الطبية</h1>
-        <div class="subtitle">إدارة طلبات التحاليل والمرضى والنتائج</div>
+        <h1>لوحة تحكم الإدمن - المراسلات</h1>
+        <div class="subtitle">إرسال رسائل إلى المستلمين المحددين</div>
       </div>
     </div>
     <button id="logoutBtn">
@@ -455,341 +480,279 @@
   <!-- إحصائيات -->
   <div class="stats-container">
     <div class="stat-card">
-      <div class="number" id="totalPatients">0</div>
-      <div class="label">إجمالي المرضى</div>
+      <div class="number" id="totalRecipients">4</div>
+      <div class="label">عدد المستلمين المتاحين</div>
     </div>
     <div class="stat-card">
-      <div class="number" id="pendingTests">0</div>
-      <div class="label">تحاليل قيد الانتظار</div>
+      <div class="number" id="selectedRecipients">0</div>
+      <div class="label">المستلمين المحددين</div>
     </div>
     <div class="stat-card">
-      <div class="number" id="completedTests">0</div>
-      <div class="label">تحاليل مكتملة</div>
+      <div class="number" id="totalSent">0</div>
+      <div class="label">الرسائل المرسلة</div>
     </div>
     <div class="stat-card">
-      <div class="number" id="todayAppointments">0</div>
-      <div class="label">مواعيد اليوم</div>
+      <div class="number" id="lastSent">-</div>
+      <div class="label">آخر إرسال</div>
     </div>
   </div>
 
-  <!-- قسم بيانات المرضى -->
+  <!-- قسم إرسال الرسائل -->
   <div class="content-section">
-    <h2><i class="fas fa-users"></i> بيانات المرضى والتحاليل</h2>
-    <table id="patientsTable">
-      <thead>
-        <tr>
-          <th>رقم الملف</th>
-          <th>اسم المريض</th>
-          <th>العمر</th>
-          <th>نوع التحليل</th>
-          <th>تاريخ الطلب</th>
-          <th>الحالة</th>
-          <th>الإجراءات</th>
-        </tr>
-      </thead>
-      <tbody id="patientsTableBody">
-        <!-- البيانات سيتم تحميلها بواسطة الجافاسكريبت -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- قسم إرسال النتائج -->
-  <div class="content-section" id="messages">
-    <h2><i class="fas fa-envelope"></i> إرسال نتائج التحاليل</h2>
+    <h2><i class="fas fa-envelope"></i> إرسال رسالة</h2>
     
     <div class="form-group">
-      <label for="patientSelect">اختر المريض:</label>
-      <select id="patientSelect" required>
-        <option value="">اختر المريض...</option>
-        <!-- الخيارات سيتم تحميلها بواسطة الجافاسكريبت -->
-      </select>
+      <label>اختر المستلمين:</label>
+      <div class="email-options" id="emailOptions">
+        <!-- الخيارات سيتم إنشاؤها بواسطة الجافاسكريبت -->
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="testType">نوع التحليل:</label>
-      <select id="testType" required>
-        <option value="">اختر نوع التحليل...</option>
-        <option value="cbc">تحليل صورة دم كاملة (CBC)</option>
-        <option value="lipid">تحليل دهون الدم (Lipid Profile)</option>
-        <option value="liver">وظائف الكبد (Liver Function)</option>
-        <option value="kidney">وظائف الكلى (Kidney Function)</option>
-        <option value="sugar">سكر الدم (Blood Sugar)</option>
-        <option value="thyroid">هرمونات الغدة الدرقية (Thyroid)</option>
-        <option value="vitamins">تحليل الفيتامينات</option>
-        <option value="urine">تحليل البول</option>
-        <option value="other">تحاليل أخرى</option>
-      </select>
+      <label>أو أدخل بريداً إلكترونياً جديداً:</label>
+      <div class="email-input-group">
+        <input type="email" id="customEmail" class="email-input" placeholder="example@domain.com">
+        <button type="button" id="addCustomEmail" class="action-btn" style="background: var(--info);">
+          <i class="fas fa-plus"></i>
+          إضافة
+        </button>
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="resultInput">نتيجة التحليل:</label>
-      <textarea id="resultInput" placeholder="أدخل نتيجة التحليل بالتفصيل..." required></textarea>
+      <label for="subjectInput">عنوان الرسالة:</label>
+      <input type="text" id="subjectInput" class="email-input" placeholder="أدخل عنوان الرسالة...">
     </div>
 
     <div class="form-group">
-      <label for="notesInput">ملاحظات إضافية:</label>
-      <textarea id="notesInput" placeholder="أي ملاحظات إضافية للمريض..."></textarea>
+      <label for="messageInput">نص الرسالة:</label>
+      <textarea id="messageInput" placeholder="اكتب رسالتك هنا..."></textarea>
     </div>
 
-    <button id="sendResultBtn">
-      <i class="fas fa-paper-plane"></i>
-      إرسال النتيجة
-    </button>
+    <div class="action-buttons">
+      <button id="sendMessageBtn" class="action-btn send-btn">
+        <i class="fas fa-paper-plane"></i>
+        إرسال الرسالة
+      </button>
+      
+      <button id="clearFormBtn" class="action-btn clear-btn">
+        <i class="fas fa-eraser"></i>
+        مسح النموذج
+      </button>
+    </div>
 
     <div id="sendResponse" class="response"></div>
   </div>
 
-  <!-- قسم النتائج المرسلة -->
-  <div class="content-section" id="sentResults">
-    <h2><i class="fas fa-file-medical"></i> النتائج المرسلة</h2>
-    <table id="sentResultsTable">
-      <thead>
-        <tr>
-          <th>اسم المريض</th>
-          <th>نوع التحليل</th>
-          <th>النتيجة</th>
-          <th>تاريخ الإرسال</th>
-          <th>الإجراءات</th>
-        </tr>
-      </thead>
-      <tbody id="sentResultsTableBody">
-        <!-- البيانات سيتم تحميلها بواسطة الجافاسكريبت -->
-      </tbody>
-    </table>
-  </div>
-
   <!-- تذييل الصفحة -->
   <div class="footer">
-    <p>© 2024 مختبر التحاليل الطبية المتقدم. جميع الحقوق محفوظة.</p>
-    <p>لوحة تحكم الإدمن - الإصدار 2.0</p>
+    <p>© 2024 نظام المراسلات الإلكتروني. جميع الحقوق محفوظة.</p>
+    <p>لوحة تحكم الإدمن - الإصدار 1.0</p>
   </div>
 
   <script>
     // عناصر DOM
-    const patientsTableBody = document.getElementById('patientsTableBody');
-    const sentResultsTableBody = document.getElementById('sentResultsTableBody');
+    const emailOptionsContainer = document.getElementById('emailOptions');
+    const customEmailInput = document.getElementById('customEmail');
+    const addCustomEmailBtn = document.getElementById('addCustomEmail');
+    const subjectInput = document.getElementById('subjectInput');
+    const messageInput = document.getElementById('messageInput');
+    const sendMessageBtn = document.getElementById('sendMessageBtn');
+    const clearFormBtn = document.getElementById('clearFormBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-    const sendResultBtn = document.getElementById('sendResultBtn');
-    const patientSelect = document.getElementById('patientSelect');
-    const testType = document.getElementById('testType');
-    const resultInput = document.getElementById('resultInput');
-    const notesInput = document.getElementById('notesInput');
     const sendResponse = document.getElementById('sendResponse');
     
     // عناصر الإحصائيات
-    const totalPatientsEl = document.getElementById('totalPatients');
-    const pendingTestsEl = document.getElementById('pendingTests');
-    const completedTestsEl = document.getElementById('completedTests');
-    const todayAppointmentsEl = document.getElementById('todayAppointments');
+    const selectedRecipientsEl = document.getElementById('selectedRecipients');
+    const totalSentEl = document.getElementById('totalSent');
+    const lastSentEl = document.getElementById('lastSent');
 
-    // بيانات تجريبية للمرضى (ستأتي من قاعدة البيانات في التطبيق الحقيقي)
-    const patients = [
-      { id: 1001, name: "أحمد محمد محمود", age: 35, testType: "تحليل صورة دم كاملة", requestDate: "2024-01-15", status: "completed", phone: "0123456789", email: "ahmed@example.com" },
-      { id: 1002, name: "سارة علي حسن", age: 28, testType: "تحليل دهون الدم", requestDate: "2024-01-16", status: "pending", phone: "0111222333", email: "sara@example.com" },
-      { id: 1003, name: "محمد خالد عبدالله", age: 42, testType: "وظائف الكبد", requestDate: "2024-01-14", status: "completed", phone: "0105555666", email: "mohamed@example.com" },
-      { id: 1004, name: "فاطمة عمر إبراهيم", age: 31, testType: "سكر الدم", requestDate: "2024-01-17", status: "pending", phone: "0107777888", email: "fatima@example.com" },
-      { id: 1005, name: "يوسف سمير رجب", age: 50, testType: "هرمونات الغدة الدرقية", requestDate: "2024-01-13", status: "completed", phone: "0129999000", email: "youssef@example.com" },
-      { id: 1006, name: "نورا هاني سليمان", age: 26, testType: "تحليل الفيتامينات", requestDate: "2024-01-18", status: "pending", phone: "0115666777", email: "nora@example.com" }
+    // قائمة البريدات الإلكترونية الافتراضية (يمكن تعديلها)
+    const defaultEmails = [
+      { email: "admin@lab.com", label: "المدير العام", checked: false },
+      { email: "reception@lab.com", label: "موظف الاستقبال", checked: false },
+      { email: "lab.manager@lab.com", label: "مدير المختبر", checked: false },
+      { email: "results@lab.com", label: "قسم النتائج", checked: false }
     ];
 
-    // بيانات تجريبية للنتائج المرسلة
-    let sentResults = [
-      { patientName: "أحمد محمد محمود", testType: "تحليل صورة دم كاملة", result: "جميع النتائج ضمن المعدل الطبيعي", sentAt: "2024-01-15 14:30", notes: "لا توجد ملاحظات" },
-      { patientName: "محمد خالد عبدالله", testType: "وظائف الكبد", result: "إنزيمات الكبد مرتفعة قليلاً، يرجى مراجعة الطبيب", sentAt: "2024-01-14 11:15", notes: "يُنصح بعمل تحليل متابعة بعد شهر" },
-      { patientName: "يوسف سمير رجب", testType: "هرمونات الغدة الدرقية", result: "النتائج طبيعية، TSH = 2.1", sentAt: "2024-01-13 16:45", notes: "" }
-    ];
+    // بيانات التطبيق
+    let emailList = [...defaultEmails];
+    let selectedEmails = [];
+    let totalMessagesSent = 0;
+    let lastMessageSent = null;
 
-    // تحميل بيانات المرضى وعرضها
-    function loadPatients() {
-      patientsTableBody.innerHTML = '';
+    // تهيئة قائمة البريدات الإلكترونية
+    function initEmailOptions() {
+      emailOptionsContainer.innerHTML = '';
       
-      patients.forEach(patient => {
-        const tr = document.createElement('tr');
-        const statusClass = patient.status === 'completed' ? 'completed' : 
-                          patient.status === 'pending' ? 'pending' : 'cancelled';
-        const statusText = patient.status === 'completed' ? 'مكتمل' : 
-                          patient.status === 'pending' ? 'قيد الانتظار' : 'ملغي';
-        
-        tr.innerHTML = `
-          <td>${patient.id}</td>
-          <td>${patient.name}</td>
-          <td>${patient.age} سنة</td>
-          <td>${patient.testType}</td>
-          <td>${new Date(patient.requestDate).toLocaleDateString('ar-EG')}</td>
-          <td><span class="status ${statusClass}">${statusText}</span></td>
-          <td>
-            <button class="delete-btn" data-id="${patient.id}">
-              <i class="fas fa-trash"></i>
-              حذف
-            </button>
-          </td>
+      emailList.forEach((emailObj, index) => {
+        const emailOption = document.createElement('div');
+        emailOption.className = `email-option ${emailObj.checked ? 'selected' : ''}`;
+        emailOption.innerHTML = `
+          <input type="checkbox" id="email-${index}" ${emailObj.checked ? 'checked' : ''} data-index="${index}">
+          <div>
+            <div style="font-weight: 600; color: var(--dark-text);">${emailObj.label}</div>
+            <div style="color: var(--dark-text-secondary); font-size: 0.9rem;">${emailObj.email}</div>
+          </div>
         `;
-        patientsTableBody.appendChild(tr);
+        
+        // إضافة حدث التحديد
+        const checkbox = emailOption.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', function() {
+          const idx = parseInt(this.getAttribute('data-index'));
+          emailList[idx].checked = this.checked;
+          emailOption.classList.toggle('selected', this.checked);
+          updateSelectedRecipients();
+        });
+        
+        emailOptionsContainer.appendChild(emailOption);
       });
-
-      // تحديث الإحصائيات
+      
+      updateSelectedRecipients();
       updateStatistics();
-      
-      // تحديث قائمة اختيار المرضى
-      updatePatientSelect();
-      
-      // إضافة أحداث الحذف
-      addDeleteEvents();
     }
 
-    // تحميل النتائج المرسلة وعرضها
-    function loadSentResults() {
-      sentResultsTableBody.innerHTML = '';
-      
-      if (sentResults.length === 0) {
-        sentResultsTableBody.innerHTML = `
-          <tr>
-            <td colspan="5" style="text-align: center; padding: 30px; color: var(--dark-text-secondary);">
-              <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-              لا توجد نتائج مرسلة حالياً
-            </td>
-          </tr>
-        `;
-        return;
-      }
-      
-      sentResults.forEach((result, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${result.patientName}</td>
-          <td>${result.testType}</td>
-          <td>${result.result.substring(0, 50)}${result.result.length > 50 ? '...' : ''}</td>
-          <td>${new Date(result.sentAt).toLocaleString('ar-EG')}</td>
-          <td>
-            <button class="delete-btn" data-index="${index}">
-              <i class="fas fa-trash"></i>
-              حذف
-            </button>
-          </td>
-        `;
-        sentResultsTableBody.appendChild(tr);
-      });
-      
-      // إضافة أحداث الحذف للنتائج
-      addDeleteResultEvents();
+    // تحديث عدد المستلمين المحددين
+    function updateSelectedRecipients() {
+      selectedEmails = emailList.filter(email => email.checked);
+      selectedRecipientsEl.textContent = selectedEmails.length;
     }
 
     // تحديث الإحصائيات
     function updateStatistics() {
-      const totalPatients = patients.length;
-      const pendingTests = patients.filter(p => p.status === 'pending').length;
-      const completedTests = patients.filter(p => p.status === 'completed').length;
-      const today = new Date().toISOString().split('T')[0];
-      const todayAppointments = patients.filter(p => p.requestDate === today).length;
+      document.getElementById('totalRecipients').textContent = emailList.length;
+      selectedRecipientsEl.textContent = selectedEmails.length;
+      totalSentEl.textContent = totalMessagesSent;
       
-      totalPatientsEl.textContent = totalPatients;
-      pendingTestsEl.textContent = pendingTests;
-      completedTestsEl.textContent = completedTests;
-      todayAppointmentsEl.textContent = todayAppointments;
+      if (lastMessageSent) {
+        const timeDiff = Math.floor((new Date() - new Date(lastMessageSent)) / 60000); // دقائق
+        if (timeDiff < 1) {
+          lastSentEl.textContent = 'الآن';
+        } else if (timeDiff < 60) {
+          lastSentEl.textContent = `منذ ${timeDiff} دقيقة`;
+        } else if (timeDiff < 1440) {
+          lastSentEl.textContent = `منذ ${Math.floor(timeDiff / 60)} ساعة`;
+        } else {
+          lastSentEl.textContent = new Date(lastMessageSent).toLocaleDateString('ar-EG');
+        }
+      } else {
+        lastSentEl.textContent = '-';
+      }
     }
 
-    // تحديث قائمة اختيار المرضى
-    function updatePatientSelect() {
-      patientSelect.innerHTML = '<option value="">اختر المريض...</option>';
+    // إضافة بريد إلكتروني مخصص
+    addCustomEmailBtn.addEventListener('click', function() {
+      const email = customEmailInput.value.trim();
       
-      patients.forEach(patient => {
-        const option = document.createElement('option');
-        option.value = patient.email;
-        option.textContent = `${patient.name} - ${patient.testType}`;
-        patientSelect.appendChild(option);
+      if (!email) {
+        showResponse('يرجى إدخال بريد إلكتروني', 'error');
+        return;
+      }
+      
+      // التحقق من صيغة البريد الإلكتروني
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showResponse('صيغة البريد الإلكتروني غير صحيحة', 'error');
+        return;
+      }
+      
+      // التحقق من عدم تكرار البريد الإلكتروني
+      if (emailList.some(e => e.email === email)) {
+        showResponse('هذا البريد الإلكتروني مضاف بالفعل', 'error');
+        return;
+      }
+      
+      // إضافة البريد الإلكتروني الجديد
+      emailList.push({
+        email: email,
+        label: `بريد مخصص ${emailList.length - defaultEmails.length + 1}`,
+        checked: true
       });
-    }
+      
+      // إعادة تهيئة القائمة
+      initEmailOptions();
+      
+      // مسح حقل الإدخال
+      customEmailInput.value = '';
+      
+      showResponse(`تم إضافة البريد الإلكتروني: ${email}`, 'success');
+    });
 
-    // إضافة أحداث الحذف للمرضى
-    function addDeleteEvents() {
-      document.querySelectorAll('#patientsTableBody .delete-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const patientId = parseInt(this.getAttribute('data-id'));
-          const patient = patients.find(p => p.id === patientId);
-          
-          if (!confirm(`هل أنت متأكد من حذف بيانات المريض: ${patient.name}؟`)) return;
-          
-          // حذف المريض من المصفوفة
-          const index = patients.findIndex(p => p.id === patientId);
-          if (index !== -1) {
-            patients.splice(index, 1);
-          }
-          
-          // إعادة تحميل البيانات
-          loadPatients();
-          
-          // عرض رسالة نجاح
-          showResponse('تم حذف بيانات المريض بنجاح', 'success');
-        });
-      });
-    }
-
-    // إضافة أحداث الحذف للنتائج
-    function addDeleteResultEvents() {
-      document.querySelectorAll('#sentResultsTableBody .delete-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const resultIndex = parseInt(this.getAttribute('data-index'));
-          
-          if (!confirm('هل أنت متأكد من حذف هذه النتيجة؟')) return;
-          
-          // حذف النتيجة من المصفوفة
-          sentResults.splice(resultIndex, 1);
-          
-          // إعادة تحميل البيانات
-          loadSentResults();
-          
-          // عرض رسالة نجاح
-          showResponse('تم حذف النتيجة بنجاح', 'success');
-        });
-      });
-    }
-
-    // إرسال نتيجة تحليل
-    sendResultBtn.addEventListener('click', function() {
-      const patientEmail = patientSelect.value;
-      const test = testType.value;
-      const result = resultInput.value.trim();
-      const notes = notesInput.value.trim();
+    // إرسال الرسالة
+    sendMessageBtn.addEventListener('click', function() {
+      const subject = subjectInput.value.trim();
+      const message = messageInput.value.trim();
       
       // التحقق من البيانات
-      if (!patientEmail || !test || !result) {
-        showResponse('يرجى تعبئة جميع الحقول المطلوبة', 'error');
+      if (selectedEmails.length === 0) {
+        showResponse('يرجى تحديد مستلم واحد على الأقل', 'error');
         return;
       }
       
-      // العثور على المريض المختار
-      const patient = patients.find(p => p.email === patientEmail);
-      if (!patient) {
-        showResponse('المريض المحدد غير موجود', 'error');
+      if (!message) {
+        showResponse('يرجى كتابة نص الرسالة', 'error');
         return;
       }
       
-      // تغيير حالة تحليل المريض إلى مكتمل
-      patient.status = 'completed';
+      // عرض تفاصيل الإرسال للمستخدم
+      const emailListText = selectedEmails.map(e => `${e.label} (${e.email})`).join(', ');
+      const confirmation = confirm(`هل تريد إرسال الرسالة إلى:
       
-      // إضافة النتيجة إلى قائمة النتائج المرسلة
-      const newResult = {
-        patientName: patient.name,
-        testType: testType.options[testType.selectedIndex].text,
-        result: result,
-        sentAt: new Date().toISOString(),
-        notes: notes
-      };
+المستلمون: ${emailListText}
+
+العنوان: ${subject || 'بدون عنوان'}
+
+الرسالة: ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}
+
+ستتم معالجة الإرسال يدوياً من قبلك.`);
       
-      sentResults.unshift(newResult); // إضافة في بداية المصفوفة
+      if (!confirmation) return;
       
-      // إعادة تعيين النموذج
-      patientSelect.value = '';
-      testType.value = '';
-      resultInput.value = '';
-      notesInput.value = '';
+      // في التطبيق الحقيقي، هنا يتم إرسال طلب إلى الخادم
+      // هذا مثال لمحاكاة الإرسال
       
-      // إعادة تحميل البيانات
-      loadPatients();
-      loadSentResults();
+      // محاكاة الإرسال
+      sendMessageBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+      sendMessageBtn.disabled = true;
       
-      // عرض رسالة نجاح
-      showResponse(`تم إرسال نتيجة التحليل إلى ${patient.name} بنجاح`, 'success');
+      setTimeout(() => {
+        // زيادة عداد الرسائل المرسلة
+        totalMessagesSent++;
+        lastMessageSent = new Date().toISOString();
+        
+        // إعادة تعيين النموذج
+        subjectInput.value = '';
+        messageInput.value = '';
+        
+        // إلغاء تحديد جميع البريدات
+        emailList.forEach(email => email.checked = false);
+        initEmailOptions();
+        
+        // تحديث الإحصائيات
+        updateStatistics();
+        
+        // عرض رسالة النجاح
+        showResponse(`تم إعداد الرسالة للإرسال إلى ${selectedEmails.length} مستلم بنجاح. يمكنك الآن إرسالها يدوياً.`, 'success');
+        
+        // إعادة تعيين زر الإرسال
+        sendMessageBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الرسالة';
+        sendMessageBtn.disabled = false;
+      }, 1500);
+    });
+
+    // مسح النموذج
+    clearFormBtn.addEventListener('click', function() {
+      if (confirm('هل تريد مسح جميع الحقول؟')) {
+        subjectInput.value = '';
+        messageInput.value = '';
+        customEmailInput.value = '';
+        
+        // إلغاء تحديد جميع البريدات
+        emailList.forEach(email => email.checked = false);
+        initEmailOptions();
+        
+        showResponse('تم مسح النموذج بنجاح', 'info');
+      }
     });
 
     // تسجيل خروج
@@ -811,16 +774,41 @@
       }, 5000);
     }
 
+    // السماح بإدخال الإيميل يدوياً عند الضغط على Enter
+    customEmailInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        addCustomEmailBtn.click();
+      }
+    });
+
     // تهيئة الصفحة عند التحميل
     document.addEventListener('DOMContentLoaded', function() {
-      loadPatients();
-      loadSentResults();
+      initEmailOptions();
       
-      // تحميل أي بيانات إضافية يمكن جلبها من الخادم
-      setTimeout(() => {
-        // يمكن هنا جلب بيانات إضافية من API
-        console.log('تم تحميل لوحة التحكم بنجاح');
-      }, 500);
+      // تحميل أي بيانات محفوظة
+      const savedData = localStorage.getItem('adminDashboardData');
+      if (savedData) {
+        try {
+          const data = JSON.parse(savedData);
+          totalMessagesSent = data.totalMessagesSent || 0;
+          lastMessageSent = data.lastMessageSent || null;
+          
+          // تحديث الإحصائيات
+          updateStatistics();
+        } catch (e) {
+          console.log('لا توجد بيانات محفوظة');
+        }
+      }
+      
+      // حفظ البيانات عند إغلاق الصفحة
+      window.addEventListener('beforeunload', function() {
+        const data = {
+          totalMessagesSent: totalMessagesSent,
+          lastMessageSent: lastMessageSent,
+          emailList: emailList
+        };
+        localStorage.setItem('adminDashboardData', JSON.stringify(data));
+      });
     });
   </script>
 </body>
