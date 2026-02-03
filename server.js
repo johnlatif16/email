@@ -8,58 +8,27 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
-// ===== Firebase Admin + Firestore =====
+// ===== Firebase Admin / Firestore =====
 const admin = require("firebase-admin");
 
-// 1) FIREBASE_CONFIG: JSON string في .env (زي ما طلبت)
-function getFirebaseConfigFromEnv() {
+function getFirebaseConfig() {
   const raw = process.env.FIREBASE_CONFIG;
-  if (!raw) return {};
+  if (!raw) {
+    throw new Error("Missing FIREBASE_CONFIG in .env");
+  }
   try {
-    // لازم يكون JSON سطر واحد في .env
     return JSON.parse(raw);
   } catch (e) {
-    console.error("FIREBASE_CONFIG is not valid JSON");
-    return {};
+    throw new Error("FIREBASE_CONFIG must be valid JSON (one line).");
   }
 }
 
-// 2) Credentials:
-// - إما GOOGLE_APPLICATION_CREDENTIALS (مسار ملف) => admin.applicationDefault()
-// - أو FIREBASE_SERVICE_ACCOUNT (JSON كسطر واحد) => admin.credential.cert(...)
-function getFirebaseCredential() {
-  // لو حبيت تستخدم JSON كامل في env (بدل ملف)
-  // FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}
-  const sa = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (sa) {
-    try {
-      const obj = JSON.parse(sa);
-
-      // لو private_key موجود وفيه \n (مخزن نصيًا) نرجعه Newlines
-      if (obj.private_key && typeof obj.private_key === "string") {
-        obj.private_key = obj.private_key.replace(/\\n/g, "\n");
-      }
-
-      return admin.credential.cert(obj);
-    } catch (e) {
-      console.error("FIREBASE_SERVICE_ACCOUNT is not valid JSON");
-    }
-  }
-
-  // الطريقة القياسية: ADC (بتشتغل لو GOOGLE_APPLICATION_CREDENTIALS متظبط
-  // أو لو السيرفر شغال على Google-managed env مع صلاحيات)
-  return admin.credential.applicationDefault();
-}
-
-// Initialize once
+// يعتمد على Application Default Credentials (ADC)
+// يعني لازم السيرفر يكون شغال في بيئة Google أو عنده ADC جاهزة.
+// (مافيش Service Account هنا — بناءً على طلبك)
 if (!admin.apps.length) {
-  const firebaseConfig = getFirebaseConfigFromEnv();
-
-  // ملاحظة: initializeApp بتقبل options؛ FIREBASE_CONFIG يوفّر projectId وغيره
-  admin.initializeApp({
-    ...firebaseConfig,
-    credential: getFirebaseCredential(),
-  });
+  const firebaseConfig = getFirebaseConfig();
+  admin.initializeApp(firebaseConfig);
 }
 
 const db = admin.firestore();
@@ -80,7 +49,6 @@ app.use(
   })
 );
 
-// Static files
 app.use(express.static(path.join(__dirname, "public")));
 
 // ===== Helpers: JWT =====
@@ -99,11 +67,6 @@ function verifyToken(token) {
   return jwt.verify(token, secret);
 }
 
-/**
- * Middleware للتحقق:
- * - Authorization: Bearer <token>
- * - أو Cookie: admin_token
- */
 function checkJWT(req, res, next) {
   try {
     const authHeader = req.headers.authorization || "";
@@ -122,14 +85,11 @@ function checkJWT(req, res, next) {
 
     req.admin = decoded;
     next();
-  } catch (err) {
+  } catch {
     return res.status(401).json({ error: "Unauthorized" });
   }
 }
 
-/**
- * Middleware خاص بالصفحات (Redirect بدل JSON)
- */
 function checkJWTForPage(req, res, next) {
   try {
     const token = req.cookies?.admin_token;
@@ -150,7 +110,7 @@ function checkJWTForPage(req, res, next) {
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
-  secure: process.env.SMTP_SECURE === "true", // true for 465, false for 587
+  secure: process.env.SMTP_SECURE === "true",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -235,14 +195,10 @@ app.get("/admin-dashboard.html", checkJWTForPage, (req, res) => {
 
 // ===== Admin APIs (محمي بـ JWT) =====
 
-// جلب المستخدمين (Firestore)
+// جلب بيانات المستخدمين
 app.get("/api/admin/users", checkJWT, async (req, res) => {
   try {
-    const snap = await db
-      .collection("users")
-      .orderBy("receivedAt", "desc")
-      .get();
-
+    const snap = await db.collection("users").orderBy("receivedAt", "desc").get();
     const users = snap.docs.map((d) => {
       const data = d.data() || {};
       return {
@@ -250,12 +206,9 @@ app.get("/api/admin/users", checkJWT, async (req, res) => {
         name: data.name ?? "",
         email: data.email ?? "",
         phone: data.phone ?? "",
-        receivedAt: data.receivedAt?.toDate
-          ? data.receivedAt.toDate()
-          : data.receivedAt ?? null,
+        receivedAt: data.receivedAt?.toDate ? data.receivedAt.toDate() : null,
       };
     });
-
     res.json(users);
   } catch (e) {
     console.error("Firestore get users error:", e);
@@ -264,15 +217,12 @@ app.get("/api/admin/users", checkJWT, async (req, res) => {
 });
 
 // حذف مستخدم بالبريد (متوافق مع فرونتك الحالي)
-// الأفضل ID، لكن نحافظ على نفس endpoint
 app.delete("/api/admin/user/:email", checkJWT, async (req, res) => {
   const email = decodeURIComponent(req.params.email || "");
   const emailNorm = normalizeEmail(email);
-
   if (!emailNorm) return res.status(400).json({ error: "بريد غير صالح" });
 
   try {
-    // ابحث بأمان باستخدام emailNorm
     const q = await db
       .collection("users")
       .where("emailNorm", "==", emailNorm)
@@ -281,9 +231,7 @@ app.delete("/api/admin/user/:email", checkJWT, async (req, res) => {
 
     if (q.empty) return res.status(404).json({ error: "المستخدم غير موجود" });
 
-    const doc = q.docs[0];
-    await db.collection("users").doc(doc.id).delete();
-
+    await db.collection("users").doc(q.docs[0].id).delete();
     res.json({ message: `تم حذف المستخدم ${email} بنجاح` });
   } catch (e) {
     console.error("Firestore delete user error:", e);
@@ -291,14 +239,11 @@ app.delete("/api/admin/user/:email", checkJWT, async (req, res) => {
   }
 });
 
-// إرسال رسالة (محمي) + إرسال إيميل فعلي + حفظ في Firestore
+// إرسال رسالة + حفظ في Firestore
 app.post("/api/admin/message", checkJWT, async (req, res) => {
   const { email, message } = req.body;
-
   if (!email || !message) {
-    return res
-      .status(400)
-      .json({ error: "البريد الإلكتروني والرسالة مطلوبين" });
+    return res.status(400).json({ error: "البريد الإلكتروني والرسالة مطلوبين" });
   }
 
   try {
@@ -310,7 +255,6 @@ app.post("/api/admin/message", checkJWT, async (req, res) => {
       html: `<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`,
     });
 
-    // خزّن في Firestore
     const docRef = await db.collection("adminMessages").add({
       email: String(email),
       emailNorm: normalizeEmail(email),
@@ -321,12 +265,12 @@ app.post("/api/admin/message", checkJWT, async (req, res) => {
 
     res.json({ message: "تم إرسال الرسالة بنجاح", id: docRef.id });
   } catch (err) {
-    console.error("خطأ في إرسال الإيميل/الحفظ:", err);
+    console.error("Email/Firestore error:", err);
     res.status(500).json({ error: "حدث خطأ أثناء إرسال الإيميل" });
   }
 });
 
-// جلب كل الرسائل (Firestore)
+// جلب الرسائل
 app.get("/api/admin/messages", checkJWT, async (req, res) => {
   try {
     const snap = await db
@@ -337,10 +281,10 @@ app.get("/api/admin/messages", checkJWT, async (req, res) => {
     const messages = snap.docs.map((d) => {
       const data = d.data() || {};
       return {
-        id: d.id, // مهم للفرونت عندك
+        id: d.id,
         email: data.email ?? "",
         message: data.message ?? "",
-        sentAt: data.sentAt?.toDate ? data.sentAt.toDate() : data.sentAt ?? null,
+        sentAt: data.sentAt?.toDate ? data.sentAt.toDate() : null,
       };
     });
 
@@ -351,9 +295,7 @@ app.get("/api/admin/messages", checkJWT, async (req, res) => {
   }
 });
 
-// حذف رسالة (محمي)
-// - لو id موجود: نحذف Doc مباشرة (أفضل)
-// - لو email فقط: نحذف أول رسالة لنفس البريد (للتوافق)
+// حذف رسالة
 app.delete("/api/admin/message", checkJWT, async (req, res) => {
   const { id, email } = req.body || {};
 
@@ -361,29 +303,23 @@ app.delete("/api/admin/message", checkJWT, async (req, res) => {
     if (id) {
       const ref = db.collection("adminMessages").doc(String(id));
       const doc = await ref.get();
-      if (!doc.exists)
-        return res.status(404).json({ error: "الرسالة غير موجودة" });
-
+      if (!doc.exists) return res.status(404).json({ error: "الرسالة غير موجودة" });
       await ref.delete();
       return res.json({ message: "تم حذف الرسالة بنجاح" });
     }
 
     if (!email) {
-      return res
-        .status(400)
-        .json({ error: "id أو البريد الإلكتروني مطلوب للحذف" });
+      return res.status(400).json({ error: "id أو البريد الإلكتروني مطلوب للحذف" });
     }
 
-    const emailNorm = normalizeEmail(email);
     const q = await db
       .collection("adminMessages")
-      .where("emailNorm", "==", emailNorm)
+      .where("emailNorm", "==", normalizeEmail(email))
       .orderBy("sentAt", "desc")
       .limit(1)
       .get();
 
-    if (q.empty)
-      return res.status(404).json({ error: "الرسالة غير موجودة" });
+    if (q.empty) return res.status(404).json({ error: "الرسالة غير موجودة" });
 
     await db.collection("adminMessages").doc(q.docs[0].id).delete();
     res.json({ message: "تم حذف الرسالة بنجاح" });
@@ -393,7 +329,7 @@ app.delete("/api/admin/message", checkJWT, async (req, res) => {
   }
 });
 
-// ===== تشغيل السيرفر =====
+// ===== Start =====
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
