@@ -265,10 +265,6 @@ await transporter.sendMail({
 
           <!-- Spacer -->
           <div style="height:14px;"></div>
-
-          <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#9ca3af;">
-            تم الإرسال عبر Nodemailer
-          </div>
         </td>
       </tr>
     </table>
