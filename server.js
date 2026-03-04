@@ -186,21 +186,86 @@ app.delete('/api/admin/user/:email', checkJWT, (req, res) => {
 });
 
 // إرسال رسالة (محمي) + إرسال إيميل فعلي
-app.post('/api/admin/message', checkJWT, async (req, res) => {
-  const { email, message } = req.body;
+const safeMessageHtml = escapeHtml(message).replace(/\n/g, '<br/>');
+const previewText = 'تم إرسال نتيجة/رسالة من lab-results';
 
-  if (!email || !message) {
-    return res.status(400).json({ error: 'البريد الإلكتروني والرسالة مطلوبين' });
-  }
+await transporter.sendMail({
+  from: `"lab-results (معمل چون)" <${process.env.SMTP_USER}>`,
+  to: email,
+  subject: 'lab-results (معمل چون)',
+  text: message, // خلي الـ plain text موجود لتحسين التوافق
+  html: `<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lab-results</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f6f7fb;">
+    <!-- Preheader (بيظهر جنب العنوان في بعض التطبيقات) -->
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+      ${previewText}
+    </div>
 
-  try {
-    await transporter.sendMail({
-      from: `"lab-results (معمل چون)" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: 'lab-results (معمل چون)',
-      text: message,
-      html: `<p>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>`
-    });
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f6f7fb;padding:24px 12px;">
+      <tr>
+        <td align="center">
+          <!-- Container -->
+          <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="width:600px;max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(20,20,43,.08);">
+            <!-- Header -->
+            <tr>
+              <td style="background:#111827;padding:18px 22px;">
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.4;color:#ffffff;font-weight:700;">
+                  lab-results <span style="font-weight:400;opacity:.85;">(معمل چون)</span>
+                </div>
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#cbd5e1;margin-top:6px;">
+                  رسالة تلقائية — برجاء عدم الرد على هذا البريد
+                </div>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:22px;">
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.9;color:#111827;">
+                  <div style="font-size:16px;font-weight:700;margin-bottom:10px;">مرحبًا،</div>
+
+                  <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:12px;padding:14px 14px;">
+                    <div style="font-size:12px;color:#6b7280;margin-bottom:8px;">نص الرسالة:</div>
+                    <div style="font-size:14px;color:#111827;">
+                      ${safeMessageHtml}
+                    </div>
+                  </div>
+
+                  <div style="margin-top:16px;font-size:12px;color:#6b7280;">
+                    إذا لم تكن تتوقع هذه الرسالة، يمكنك تجاهلها.
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:16px 22px;background:#f9fafb;border-top:1px solid #eef2f7;">
+                <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#6b7280;">
+                  © ${new Date().getFullYear()} lab-results — جميع الحقوق محفوظة
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Spacer -->
+          <div style="height:14px;"></div>
+
+          <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#9ca3af;">
+            تم الإرسال عبر Nodemailer
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+});
 
     // إضافة id بسيط (عشان الحذف يكون أدق لو حبيت)
     const id = `${Date.now()}_${Math.random().toString(16).slice(2)}`;
